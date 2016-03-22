@@ -4,7 +4,7 @@ import StartApp.Simple exposing (start)
 
 main =
   start
-    { model = 0
+    { model = TicTacToe.newModel
     , update = update
     , view = view
     }
