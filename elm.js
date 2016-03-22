@@ -11537,11 +11537,19 @@ Elm.TicTacToe.Model.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var get = F2(function (board,_p0) {
-      var _p1 = _p0;
+   var applyAt = F3(function (index,f,array) {
+      var _p0 = A2($Array.get,index,array);
+      if (_p0.ctor === "Nothing") {
+            return array;
+         } else {
+            return A3($Array.set,index,f(_p0._0),array);
+         }
+   });
+   var get = F2(function (board,_p1) {
+      var _p2 = _p1;
       return A2($Maybe.andThen,
-      A2($Array.get,_p1._0,board),
-      $Array.get(_p1._1));
+      A2($Array.get,_p2._0,board),
+      $Array.get(_p2._1));
    });
    var Model = F3(function (a,b,c) {
       return {board: a,turn: b,state: c};
@@ -11552,26 +11560,20 @@ Elm.TicTacToe.Model.make = function (_elm) {
    var PlayedBy = function (a) {
       return {ctor: "PlayedBy",_0: a};
    };
-   var set = F3(function (board,_p2,player) {
-      var _p3 = _p2;
-      var _p7 = _p3._0;
-      var _p6 = _p3._1;
-      var _p4 = A2(get,board,{ctor: "_Tuple2",_0: _p7,_1: _p6});
-      if (_p4.ctor === "Nothing") {
-            return board;
+   var setSlotPlayer = F2(function (player,slot) {
+      var _p3 = slot;
+      if (_p3.ctor === "Empty") {
+            return PlayedBy(player);
          } else {
-            if (_p4._0.ctor === "Empty") {
-                  var _p5 = A2($Array.get,_p7,board);
-                  if (_p5.ctor === "Nothing") {
-                        return board;
-                     } else {
-                        var newRow = A3($Array.set,_p6,PlayedBy(player),_p5._0);
-                        return A3($Array.set,_p7,newRow,board);
-                     }
-               } else {
-                  return board;
-               }
+            return _p3;
          }
+   });
+   var set = F3(function (_p4,player,board) {
+      var _p5 = _p4;
+      return A3(applyAt,
+      _p5._0,
+      A2(applyAt,_p5._1,setSlotPlayer(player)),
+      board);
    });
    var Empty = {ctor: "Empty"};
    var newBoard = A2($Array.initialize,
@@ -11587,8 +11589,8 @@ Elm.TicTacToe.Model.make = function (_elm) {
    var PlayerOne = {ctor: "PlayerOne"};
    var newModel = {board: newBoard,turn: PlayerOne,state: GameOn};
    var switchTurns = function (player) {
-      var _p8 = player;
-      if (_p8.ctor === "PlayerOne") {
+      var _p6 = player;
+      if (_p6.ctor === "PlayerOne") {
             return PlayerTwo;
          } else {
             return PlayerOne;
@@ -11607,6 +11609,8 @@ Elm.TicTacToe.Model.make = function (_elm) {
                                         ,newModel: newModel
                                         ,switchTurns: switchTurns
                                         ,get: get
+                                        ,applyAt: applyAt
+                                        ,setSlotPlayer: setSlotPlayer
                                         ,set: set};
 };
 Elm.TicTacToe = Elm.TicTacToe || {};
@@ -11773,9 +11777,9 @@ Elm.TicTacToe.make = function (_elm) {
    var play = F2(function (model,position) {
       var newTurn = $TicTacToe$Model.switchTurns(model.turn);
       var boardAfterPlay = A3($TicTacToe$Model.set,
-      model.board,
       position,
-      model.turn);
+      model.turn,
+      model.board);
       var stateAfterPlay = A2($TicTacToe$VictoryConditions.detectState,
       model.turn,
       boardAfterPlay);

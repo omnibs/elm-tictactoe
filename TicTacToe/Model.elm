@@ -36,20 +36,19 @@ get : Board -> Position -> Maybe Slot
 get board (row, column) =
     Array.get row board `Maybe.andThen` Array.get column
 
+applyAt : Int -> (a -> a) -> Array a -> Array a
+applyAt index f array =
+    case Array.get index array of
+        Nothing -> array
+        Just element -> Array.set index (f element) array
 
-set : Board -> Position -> Player -> Board
-set board (row, column) player = 
-    case get board (row, column) of
-        Nothing ->
-            board
-        Just Empty ->
-            case Array.get row board of
-                Nothing ->
-                    board
-                Just oldRow ->
-                    let
-                        newRow = Array.set column (PlayedBy player) oldRow
-                    in
-                        Array.set row newRow board
-        Just s ->
-            board
+setSlotPlayer : Player -> Slot -> Slot
+setSlotPlayer player slot =
+    case slot of
+        Empty -> PlayedBy player
+        whatevs -> whatevs
+
+set : Position -> Player -> Board -> Board
+set (row, column) player board = 
+    board
+    |> applyAt row (applyAt column (setSlotPlayer player))

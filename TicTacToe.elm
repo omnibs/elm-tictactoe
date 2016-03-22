@@ -30,8 +30,8 @@ update action model =
 
 play : Model -> Position -> Model
 play model position =
-    let 
-        boardAfterPlay = set model.board position model.turn
+    let --TODO: change functions to use Model instead and pipe through them all
+        boardAfterPlay = set position model.turn model.board
         stateAfterPlay = detectState model.turn boardAfterPlay
         newTurn = switchTurns model.turn
     in
