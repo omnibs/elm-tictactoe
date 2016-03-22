@@ -11521,6 +11521,224 @@ Elm.StartApp.Simple.make = function (_elm) {
                                         ,start: start};
 };
 Elm.TicTacToe = Elm.TicTacToe || {};
+Elm.TicTacToe.Model = Elm.TicTacToe.Model || {};
+Elm.TicTacToe.Model.make = function (_elm) {
+   "use strict";
+   _elm.TicTacToe = _elm.TicTacToe || {};
+   _elm.TicTacToe.Model = _elm.TicTacToe.Model || {};
+   if (_elm.TicTacToe.Model.values)
+   return _elm.TicTacToe.Model.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var get = F2(function (board,_p0) {
+      var _p1 = _p0;
+      return A2($Maybe.andThen,
+      A2($Array.get,_p1._0,board),
+      $Array.get(_p1._1));
+   });
+   var Model = F3(function (a,b,c) {
+      return {board: a,turn: b,state: c};
+   });
+   var Won = function (a) {    return {ctor: "Won",_0: a};};
+   var Stalled = {ctor: "Stalled"};
+   var GameOn = {ctor: "GameOn"};
+   var PlayedBy = function (a) {
+      return {ctor: "PlayedBy",_0: a};
+   };
+   var set = F3(function (board,_p2,player) {
+      var _p3 = _p2;
+      var _p7 = _p3._0;
+      var _p6 = _p3._1;
+      var _p4 = A2(get,board,{ctor: "_Tuple2",_0: _p7,_1: _p6});
+      if (_p4.ctor === "Nothing") {
+            return board;
+         } else {
+            if (_p4._0.ctor === "Empty") {
+                  var _p5 = A2($Array.get,_p7,board);
+                  if (_p5.ctor === "Nothing") {
+                        return board;
+                     } else {
+                        var newRow = A3($Array.set,_p6,PlayedBy(player),_p5._0);
+                        return A3($Array.set,_p7,newRow,board);
+                     }
+               } else {
+                  return board;
+               }
+         }
+   });
+   var Empty = {ctor: "Empty"};
+   var newBoard = A2($Array.initialize,
+   3,
+   function (row) {
+      return A2($Array.initialize,
+      3,
+      function (col) {
+         return Empty;
+      });
+   });
+   var PlayerTwo = {ctor: "PlayerTwo"};
+   var PlayerOne = {ctor: "PlayerOne"};
+   var newModel = {board: newBoard,turn: PlayerOne,state: GameOn};
+   var switchTurns = function (player) {
+      var _p8 = player;
+      if (_p8.ctor === "PlayerOne") {
+            return PlayerTwo;
+         } else {
+            return PlayerOne;
+         }
+   };
+   return _elm.TicTacToe.Model.values = {_op: _op
+                                        ,PlayerOne: PlayerOne
+                                        ,PlayerTwo: PlayerTwo
+                                        ,Empty: Empty
+                                        ,PlayedBy: PlayedBy
+                                        ,GameOn: GameOn
+                                        ,Stalled: Stalled
+                                        ,Won: Won
+                                        ,newBoard: newBoard
+                                        ,Model: Model
+                                        ,newModel: newModel
+                                        ,switchTurns: switchTurns
+                                        ,get: get
+                                        ,set: set};
+};
+Elm.TicTacToe = Elm.TicTacToe || {};
+Elm.TicTacToe.VictoryConditions = Elm.TicTacToe.VictoryConditions || {};
+Elm.TicTacToe.VictoryConditions.make = function (_elm) {
+   "use strict";
+   _elm.TicTacToe = _elm.TicTacToe || {};
+   _elm.TicTacToe.VictoryConditions = _elm.TicTacToe.VictoryConditions || {};
+   if (_elm.TicTacToe.VictoryConditions.values)
+   return _elm.TicTacToe.VictoryConditions.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Set = Elm.Set.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $TicTacToe$Model = Elm.TicTacToe.Model.make(_elm);
+   var _op = {};
+   var diagonals = _U.list([_U.list([{ctor: "_Tuple2",_0: 0,_1: 0}
+                                    ,{ctor: "_Tuple2",_0: 1,_1: 1}
+                                    ,{ctor: "_Tuple2",_0: 2,_1: 2}])
+                           ,_U.list([{ctor: "_Tuple2",_0: 2,_1: 0}
+                                    ,{ctor: "_Tuple2",_0: 1,_1: 1}
+                                    ,{ctor: "_Tuple2",_0: 0,_1: 2}])]);
+   var columns = _U.list([_U.list([{ctor: "_Tuple2",_0: 0,_1: 0}
+                                  ,{ctor: "_Tuple2",_0: 1,_1: 0}
+                                  ,{ctor: "_Tuple2",_0: 2,_1: 0}])
+                         ,_U.list([{ctor: "_Tuple2",_0: 0,_1: 1}
+                                  ,{ctor: "_Tuple2",_0: 1,_1: 1}
+                                  ,{ctor: "_Tuple2",_0: 2,_1: 1}])
+                         ,_U.list([{ctor: "_Tuple2",_0: 0,_1: 2}
+                                  ,{ctor: "_Tuple2",_0: 1,_1: 2}
+                                  ,{ctor: "_Tuple2",_0: 2,_1: 2}])]);
+   var rows = _U.list([_U.list([{ctor: "_Tuple2",_0: 0,_1: 0}
+                               ,{ctor: "_Tuple2",_0: 0,_1: 1}
+                               ,{ctor: "_Tuple2",_0: 0,_1: 2}])
+                      ,_U.list([{ctor: "_Tuple2",_0: 1,_1: 0}
+                               ,{ctor: "_Tuple2",_0: 1,_1: 1}
+                               ,{ctor: "_Tuple2",_0: 1,_1: 2}])
+                      ,_U.list([{ctor: "_Tuple2",_0: 2,_1: 0}
+                               ,{ctor: "_Tuple2",_0: 2,_1: 1}
+                               ,{ctor: "_Tuple2",_0: 2,_1: 2}])]);
+   var victoryConditions = $List.concat(_U.list([rows
+                                                ,columns
+                                                ,diagonals]));
+   var justPlayers = function (list) {
+      return A3($List.foldl,
+      F2(function (elm,acc) {
+         var _p0 = elm;
+         if (_p0.ctor === "Just") {
+               return A2($List._op["::"],_p0._0,acc);
+            } else {
+               return acc;
+            }
+      }),
+      _U.list([]),
+      list);
+   };
+   var getPlayer = function (s) {
+      var _p1 = s;
+      if (_p1.ctor === "Empty") {
+            return $Maybe.Nothing;
+         } else {
+            return $Maybe.Just(_p1._0);
+         }
+   };
+   var slotsToState = function (slots) {
+      var nonEmpty = justPlayers(A2($List.map,getPlayer,slots));
+      var anyPlayer = $List.head(nonEmpty);
+      var numPlayers = $Set.size($Set.fromList(A2($List.map,
+      $Basics.toString,
+      nonEmpty)));
+      var _p2 = anyPlayer;
+      if (_p2.ctor === "Nothing") {
+            return $TicTacToe$Model.GameOn;
+         } else {
+            return _U.cmp(numPlayers,
+            1) > 0 ? $TicTacToe$Model.Stalled : _U.eq($List.length(nonEmpty),
+            $List.length(slots)) ? $TicTacToe$Model.Won(_p2._0) : $TicTacToe$Model.GameOn;
+         }
+   };
+   var getSlots = F2(function (board,positions) {
+      return A3($List.foldr,
+      F2(function (position,acc) {
+         var _p3 = A2($TicTacToe$Model.get,board,position);
+         if (_p3.ctor === "Nothing") {
+               return acc;
+            } else {
+               return A2($List._op["::"],_p3._0,acc);
+            }
+      }),
+      _U.list([]),
+      positions);
+   });
+   var findVictory = function (states) {
+      return A3($List.foldl,
+      F2(function (state,acc) {
+         var _p4 = state;
+         switch (_p4.ctor)
+         {case "Stalled": return acc;
+            case "GameOn": return acc;
+            default: return $TicTacToe$Model.Won(_p4._0);}
+      }),
+      $TicTacToe$Model.GameOn,
+      states);
+   };
+   var detectState = F2(function (player,board) {
+      return function (states) {
+         return A2($List.all,
+         function (state) {
+            return _U.eq(state,$TicTacToe$Model.Stalled);
+         },
+         states) ? $TicTacToe$Model.Stalled : findVictory(states);
+      }(A2($List.map,
+      slotsToState,
+      A2($List.map,getSlots(board),victoryConditions)));
+   });
+   return _elm.TicTacToe.VictoryConditions.values = {_op: _op
+                                                    ,detectState: detectState
+                                                    ,findVictory: findVictory
+                                                    ,getSlots: getSlots
+                                                    ,slotsToState: slotsToState
+                                                    ,getPlayer: getPlayer
+                                                    ,justPlayers: justPlayers
+                                                    ,rows: rows
+                                                    ,columns: columns
+                                                    ,diagonals: diagonals
+                                                    ,victoryConditions: victoryConditions};
+};
+Elm.TicTacToe = Elm.TicTacToe || {};
 Elm.TicTacToe.make = function (_elm) {
    "use strict";
    _elm.TicTacToe = _elm.TicTacToe || {};
@@ -11536,9 +11754,10 @@ Elm.TicTacToe.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Set = Elm.Set.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm);
+   $String = Elm.String.make(_elm),
+   $TicTacToe$Model = Elm.TicTacToe.Model.make(_elm),
+   $TicTacToe$VictoryConditions = Elm.TicTacToe.VictoryConditions.make(_elm);
    var _op = {};
    var stateDescription = function (model) {
       var _p0 = model.state;
@@ -11551,6 +11770,30 @@ Elm.TicTacToe.make = function (_elm) {
            $Basics.toString(_p0._0),
            " Won");}
    };
+   var play = F2(function (model,position) {
+      var newTurn = $TicTacToe$Model.switchTurns(model.turn);
+      var boardAfterPlay = A3($TicTacToe$Model.set,
+      model.board,
+      position,
+      model.turn);
+      var stateAfterPlay = A2($TicTacToe$VictoryConditions.detectState,
+      model.turn,
+      boardAfterPlay);
+      return _U.update(model,
+      {board: boardAfterPlay,turn: newTurn,state: stateAfterPlay});
+   });
+   var update = F2(function (action,model) {
+      var _p1 = action;
+      if (_p1.ctor === "Reset") {
+            return $TicTacToe$Model.newModel;
+         } else {
+            var _p2 = model.state;
+            switch (_p2.ctor)
+            {case "Won": return model;
+               case "Stalled": return model;
+               default: return A2(play,model,_p1._0);}
+         }
+   });
    var Play = function (a) {    return {ctor: "Play",_0: a};};
    var toTableCell = F4(function (address,rowIdx,colIdx,slot) {
       return A2($Html.td,
@@ -11563,9 +11806,9 @@ Elm.TicTacToe.make = function (_elm) {
               address,
               Play({ctor: "_Tuple2",_0: rowIdx,_1: colIdx}))]),
       _U.list([$Html.text(function () {
-         var _p1 = slot;
-         if (_p1.ctor === "PlayedBy") {
-               if (_p1._0.ctor === "PlayerOne") {
+         var _p3 = slot;
+         if (_p3.ctor === "PlayedBy") {
+               if (_p3._0.ctor === "PlayerOne") {
                      return $String.fromChar($Char.fromCode(10060));
                   } else {
                      return $String.fromChar($Char.fromCode(8413));
@@ -11599,205 +11842,7 @@ Elm.TicTacToe.make = function (_elm) {
               model.board)))]));
    });
    var Reset = {ctor: "Reset"};
-   var diagonals = _U.list([_U.list([{ctor: "_Tuple2",_0: 0,_1: 0}
-                                    ,{ctor: "_Tuple2",_0: 1,_1: 1}
-                                    ,{ctor: "_Tuple2",_0: 2,_1: 2}])
-                           ,_U.list([{ctor: "_Tuple2",_0: 2,_1: 0}
-                                    ,{ctor: "_Tuple2",_0: 1,_1: 1}
-                                    ,{ctor: "_Tuple2",_0: 0,_1: 2}])]);
-   var columns = _U.list([_U.list([{ctor: "_Tuple2",_0: 0,_1: 0}
-                                  ,{ctor: "_Tuple2",_0: 1,_1: 0}
-                                  ,{ctor: "_Tuple2",_0: 2,_1: 0}])
-                         ,_U.list([{ctor: "_Tuple2",_0: 0,_1: 1}
-                                  ,{ctor: "_Tuple2",_0: 1,_1: 1}
-                                  ,{ctor: "_Tuple2",_0: 2,_1: 1}])
-                         ,_U.list([{ctor: "_Tuple2",_0: 0,_1: 2}
-                                  ,{ctor: "_Tuple2",_0: 1,_1: 2}
-                                  ,{ctor: "_Tuple2",_0: 2,_1: 2}])]);
-   var rows = _U.list([_U.list([{ctor: "_Tuple2",_0: 0,_1: 0}
-                               ,{ctor: "_Tuple2",_0: 0,_1: 1}
-                               ,{ctor: "_Tuple2",_0: 0,_1: 2}])
-                      ,_U.list([{ctor: "_Tuple2",_0: 1,_1: 0}
-                               ,{ctor: "_Tuple2",_0: 1,_1: 1}
-                               ,{ctor: "_Tuple2",_0: 1,_1: 2}])
-                      ,_U.list([{ctor: "_Tuple2",_0: 2,_1: 0}
-                               ,{ctor: "_Tuple2",_0: 2,_1: 1}
-                               ,{ctor: "_Tuple2",_0: 2,_1: 2}])]);
-   var victoryConditions = $List.concat(_U.list([rows
-                                                ,columns
-                                                ,diagonals]));
-   var justPlayers = function (list) {
-      return A3($List.foldl,
-      F2(function (elm,acc) {
-         var _p2 = elm;
-         if (_p2.ctor === "Just") {
-               return A2($List._op["::"],_p2._0,acc);
-            } else {
-               return acc;
-            }
-      }),
-      _U.list([]),
-      list);
-   };
-   var getPlayer = function (s) {
-      var _p3 = s;
-      if (_p3.ctor === "Empty") {
-            return $Maybe.Nothing;
-         } else {
-            return $Maybe.Just(_p3._0);
-         }
-   };
-   var get = F2(function (board,_p4) {
-      var _p5 = _p4;
-      return A2($Maybe.andThen,
-      A2($Array.get,_p5._0,board),
-      $Array.get(_p5._1));
-   });
-   var getSlots = F2(function (board,positions) {
-      return A3($List.foldr,
-      F2(function (position,acc) {
-         var _p6 = A2(get,board,position);
-         if (_p6.ctor === "Nothing") {
-               return acc;
-            } else {
-               return A2($List._op["::"],_p6._0,acc);
-            }
-      }),
-      _U.list([]),
-      positions);
-   });
-   var Model = F3(function (a,b,c) {
-      return {board: a,turn: b,state: c};
-   });
-   var Won = function (a) {    return {ctor: "Won",_0: a};};
-   var Stalled = {ctor: "Stalled"};
-   var GameOn = {ctor: "GameOn"};
-   var findVictory = function (states) {
-      return A3($List.foldl,
-      F2(function (state,acc) {
-         var _p7 = state;
-         switch (_p7.ctor)
-         {case "Stalled": return acc;
-            case "GameOn": return acc;
-            default: return Won(_p7._0);}
-      }),
-      GameOn,
-      states);
-   };
-   var slotsToState = function (slots) {
-      var nonEmpty = justPlayers(A2($List.map,getPlayer,slots));
-      var anyPlayer = $List.head(nonEmpty);
-      var numPlayers = $Set.size($Set.fromList(A2($List.map,
-      $Basics.toString,
-      nonEmpty)));
-      var _p8 = anyPlayer;
-      if (_p8.ctor === "Nothing") {
-            return GameOn;
-         } else {
-            return _U.cmp(numPlayers,
-            1) > 0 ? Stalled : _U.eq($List.length(nonEmpty),
-            $List.length(slots)) ? Won(_p8._0) : GameOn;
-         }
-   };
-   var detectState = F2(function (player,board) {
-      return function (states) {
-         return A2($List.all,
-         function (state) {
-            return _U.eq(state,Stalled);
-         },
-         states) ? Stalled : findVictory(states);
-      }(A2($List.map,
-      slotsToState,
-      A2($List.map,getSlots(board),victoryConditions)));
-   });
-   var PlayedBy = function (a) {
-      return {ctor: "PlayedBy",_0: a};
-   };
-   var set = F3(function (board,_p9,player) {
-      var _p10 = _p9;
-      var _p14 = _p10._0;
-      var _p13 = _p10._1;
-      var _p11 = A2(get,board,{ctor: "_Tuple2",_0: _p14,_1: _p13});
-      if (_p11.ctor === "Nothing") {
-            return board;
-         } else {
-            if (_p11._0.ctor === "Empty") {
-                  var _p12 = A2($Array.get,_p14,board);
-                  if (_p12.ctor === "Nothing") {
-                        return board;
-                     } else {
-                        var newRow = A3($Array.set,_p13,PlayedBy(player),_p12._0);
-                        return A3($Array.set,_p14,newRow,board);
-                     }
-               } else {
-                  return board;
-               }
-         }
-   });
-   var Empty = {ctor: "Empty"};
-   var newBoard = A2($Array.initialize,
-   3,
-   function (row) {
-      return A2($Array.initialize,
-      3,
-      function (col) {
-         return Empty;
-      });
-   });
-   var PlayerTwo = {ctor: "PlayerTwo"};
-   var PlayerOne = {ctor: "PlayerOne"};
-   var newModel = {board: newBoard,turn: PlayerOne,state: GameOn};
-   var switchTurns = function (player) {
-      var _p15 = player;
-      if (_p15.ctor === "PlayerOne") {
-            return PlayerTwo;
-         } else {
-            return PlayerOne;
-         }
-   };
-   var play = F2(function (model,position) {
-      var newTurn = switchTurns(model.turn);
-      var boardAfterPlay = A3(set,model.board,position,model.turn);
-      var stateAfterPlay = A2(detectState,model.turn,boardAfterPlay);
-      return _U.update(model,
-      {board: boardAfterPlay,turn: newTurn,state: stateAfterPlay});
-   });
-   var update = F2(function (action,model) {
-      var _p16 = action;
-      if (_p16.ctor === "Reset") {
-            return newModel;
-         } else {
-            var _p17 = model.state;
-            switch (_p17.ctor)
-            {case "Won": return model;
-               case "Stalled": return model;
-               default: return A2(play,model,_p16._0);}
-         }
-   });
    return _elm.TicTacToe.values = {_op: _op
-                                  ,PlayerOne: PlayerOne
-                                  ,PlayerTwo: PlayerTwo
-                                  ,Empty: Empty
-                                  ,PlayedBy: PlayedBy
-                                  ,GameOn: GameOn
-                                  ,Stalled: Stalled
-                                  ,Won: Won
-                                  ,newBoard: newBoard
-                                  ,Model: Model
-                                  ,newModel: newModel
-                                  ,switchTurns: switchTurns
-                                  ,get: get
-                                  ,set: set
-                                  ,detectState: detectState
-                                  ,findVictory: findVictory
-                                  ,getSlots: getSlots
-                                  ,slotsToState: slotsToState
-                                  ,getPlayer: getPlayer
-                                  ,justPlayers: justPlayers
-                                  ,rows: rows
-                                  ,columns: columns
-                                  ,diagonals: diagonals
-                                  ,victoryConditions: victoryConditions
                                   ,Reset: Reset
                                   ,Play: Play
                                   ,update: update
@@ -11820,9 +11865,10 @@ Elm.Main.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp$Simple = Elm.StartApp.Simple.make(_elm),
-   $TicTacToe = Elm.TicTacToe.make(_elm);
+   $TicTacToe = Elm.TicTacToe.make(_elm),
+   $TicTacToe$Model = Elm.TicTacToe.Model.make(_elm);
    var _op = {};
-   var main = $StartApp$Simple.start({model: $TicTacToe.newModel
+   var main = $StartApp$Simple.start({model: $TicTacToe$Model.newModel
                                      ,update: $TicTacToe.update
                                      ,view: $TicTacToe.view});
    return _elm.Main.values = {_op: _op,main: main};
