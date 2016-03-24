@@ -11732,7 +11732,7 @@ Elm.TicTacToe.VictoryConditions.make = function (_elm) {
             } else {
                return {ctor: "_Tuple2"
                       ,_0: _U.eq(_p8,$TicTacToe$Model.Stalled) ? state : _p8
-                      ,_1: $Maybe.Nothing};
+                      ,_1: _p6._1};
             }
       }),
       {ctor: "_Tuple2"

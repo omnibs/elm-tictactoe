@@ -1,3 +1,7 @@
+body *{
+	box-sizing: border-box;
+	font-family: sans-serif;
+}
 body {
   text-align: center;
 }
@@ -7,24 +11,49 @@ body div {
 }
 
 table {
-	border: 1px solid black;
+	/*border: 1px solid black;*/
 	font-size: 70px;
+	border-spacing: 0px;
 }
 td {
-	border: 1px solid black;
-	width: 100px;
-	height: 100px;
+	/*border: 1px solid black;*/
+	width: 105px;
+	height: 105px;
 	text-align: center;
 }
-td.winning-move {
-	color: green;
-}
+
 td.playertwo:before{
-	content: "\20DD";
+    content: "\20DD";
     line-height: 1px;
     display: block;
     font-size: 85px;
+    font-weight: bold;
+    margin-top: -5px;
 }
 td.playerone:before{
 	content: "\274C";
 }
+
+
+body {background-color: #252830;}
+body * {color: white;}
+td.winning-move {color: #21ECA7 !important;}
+
+td.playerone {color: #9F86FF;}
+td.playertwo {color: #9F86FF;}
+
+td {border: 3px solid #434857;}
+tr:nth-child(1) td {border-top: none;}
+tr:nth-child(3) td {border-bottom: none;}
+td:nth-child(1) {border-left: none;}
+td:nth-child(3) {border-right: none;}
+
+/*td.winning-move {color: #a4fd81 !important;}
+
+td.playerone {color: #56307e;}
+td.playertwo {color: #04c9e5;}
+
+tr:nth-child(1) td {border-bottom: 5px solid black;}
+tr:nth-child(2) td {border-bottom: 5px solid black;}
+td:nth-child(1) {border-right: 5px solid black;}
+td:nth-child(2) {border-right: 5px solid black;}*/
