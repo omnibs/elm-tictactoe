@@ -5,8 +5,12 @@
   <body>
     <script type="text/javascript" src="elm.js"></script>
     <script type="text/javascript" src="_reactor/debug.js"></script>
+    <div></div>
     <script>
-    	var main = Elm.fullscreenDebug('Main', 'Main.elm');
+    	if (typeof Elm.fullscreenDebug !== 'undefined')
+    		main = Elm.fullscreenDebug('Main', 'Main.elm');
+    	else
+    		main = Elm.embed(Elm.Main, document.getElementsByTagName('div')[0])
     </script>
   </body>
 </html>
