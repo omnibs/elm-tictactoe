@@ -20,10 +20,10 @@ newBoard = Array.initialize 3 (\row -> Array.initialize 3 (\col -> Empty))
 
 
 -- MODEL
-type alias Model = {board : Board, turn: Player, state: BoardState}
+type alias Model = {board : Board, turn: Player, state: BoardState, winningMove: Maybe (List Position)}
 
 newModel : Model
-newModel = {board = newBoard, turn = PlayerOne, state = GameOn}
+newModel = {board = newBoard, turn = PlayerOne, state = GameOn, winningMove = Nothing}
 
 
 switchTurns : Player -> Player

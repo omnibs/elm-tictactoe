@@ -30,32 +30,44 @@ update action model =
 
 play : Model -> Position -> Model
 play model position =
-    let --TODO: change functions to use Model instead and pipe through them all
-        boardAfterPlay = set position model.turn model.board
-        stateAfterPlay = detectState model.turn boardAfterPlay
-        newTurn = switchTurns model.turn
-    in
-        {model | board = boardAfterPlay, turn = newTurn, state = stateAfterPlay}
+    case get model.board position of
+        Nothing -> model
+        Just Empty -> 
+            let --TODO: change functions to use Model instead and pipe through them all
+                boardAfterPlay = set position model.turn model.board
+                (stateAfterPlay, winningMove) = detectState model.turn boardAfterPlay
+                newTurn = switchTurns model.turn
+            in
+                {model | board = boardAfterPlay, turn = newTurn, state = stateAfterPlay, winningMove = winningMove}
+        Just _ ->
+            model
 
 -- VIEW
 view : Signal.Address Action -> Model -> Html
 view address model =
     div [] [
         h1 [] [text (stateDescription model)],
-        table [style [("border", "1px solid black"), ("text-align", "center"), ("font-size", "70px")]] (Array.indexedMap (toTableRow address) model.board |> Array.toList)
+        table [style [("border", "1px solid black"), ("text-align", "center"), ("font-size", "70px")]] 
+            (Array.indexedMap (toTableRow address model) model.board |> Array.toList)
     ]
 
-toTableRow : Signal.Address Action -> Int -> Array Slot -> Html
-toTableRow address rowIdx row =
-    tr [] (Array.indexedMap (toTableCell address rowIdx) row |> Array.toList)
+toTableRow : Signal.Address Action -> Model -> Int -> Array Slot -> Html
+toTableRow address model rowIdx row =
+    tr [] (Array.indexedMap (toTableCell address model rowIdx) row |> Array.toList)
 
-toTableCell : Signal.Address Action -> Int -> Int -> Slot -> Html
-toTableCell address rowIdx colIdx slot =
-    td [style [("border", "1px solid black"), ("width", "100px"), ("height", "100px")], onClick address (Play (rowIdx, colIdx))] 
+toTableCell : Signal.Address Action -> Model -> Int -> Int -> Slot -> Html
+toTableCell address model rowIdx colIdx slot =
+    td [style [("border", "1px solid black"), ("width", "100px"), ("height", "100px"), ((rowIdx, colIdx) |> isWinningMove model.winningMove |> cellColor) ], onClick address (Play (rowIdx, colIdx))] 
         [text (case slot of 
-                PlayedBy PlayerOne -> Char.fromCode 10060 |> String.fromChar
-                PlayedBy PlayerTwo -> Char.fromCode 8413 |> String.fromChar
+                PlayedBy PlayerOne -> Char.fromCode 0x274C |> String.fromChar
+                PlayedBy PlayerTwo -> Char.fromCode 0x20DD |> String.fromChar
                 Empty -> "")]
+
+cellColor : Bool -> (String, String)
+cellColor b =
+    case b of
+        False -> ("color", "black")
+        True -> ("color", "green")
 
 stateDescription : Model -> String
 stateDescription model =

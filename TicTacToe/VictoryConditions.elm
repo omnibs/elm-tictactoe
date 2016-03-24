@@ -3,24 +3,28 @@ module TicTacToe.VictoryConditions where
 import TicTacToe.Model exposing(..)
 import Set
 
-detectState : Player -> Board -> BoardState
+detectState : Player -> Board -> (BoardState, Maybe (List Position))
 detectState player board =
-    List.map (getSlots board) victoryConditions
-    |> List.map slotsToState
-    |> (\states -> 
-        if List.all (\state -> state == Stalled) states then
-            Stalled
-        else
-            findVictory states
-    )
+    victoryConditions
+    |> List.foldl (\positions (accState, winningPositions) ->
+        let 
+            state =
+                positions
+                |> getSlots board
+                |> slotsToState
+        in
+            case state of
+                Won p -> 
+                    (Won p, Just positions)
+                _ ->
+                    ((if accState == Stalled then state else accState), Nothing)
+    ) (Stalled, Nothing)
 
-findVictory : List BoardState -> BoardState
-findVictory states = List.foldl (\state acc ->
-                case state of
-                    Stalled -> acc
-                    GameOn -> acc
-                    Won p -> Won p
-            ) GameOn states
+isWinningMove : Maybe (List Position) -> Position -> Bool
+isWinningMove list pos =
+    case list of
+        Nothing -> False
+        Just l -> List.member pos l
 
 {-- gets slots from the board in the indicated positions. this is made to be curried --}
 getSlots : Board -> List Position -> List Slot
