@@ -17,7 +17,7 @@ detectState player board =
                 Won p -> 
                     (Won p, Just positions)
                 _ ->
-                    ((if accState == Stalled then state else accState), Nothing)
+                    ((if accState == Stalled then state else accState), winningPositions)
     ) (Stalled, Nothing)
 
 isWinningMove : Maybe (List Position) -> Position -> Bool
