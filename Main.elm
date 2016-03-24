@@ -1,3 +1,5 @@
+module Main where
+
 import TicTacToe.Model
 import TicTacToe exposing (update, view)
 import StartApp.Simple exposing (start)

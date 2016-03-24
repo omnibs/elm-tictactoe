@@ -1,0 +1,30 @@
+body {
+  text-align: center;
+}
+
+body div {
+  display: inline-block;
+}
+
+table {
+	border: 1px solid black;
+	font-size: 70px;
+}
+td {
+	border: 1px solid black;
+	width: 100px;
+	height: 100px;
+	text-align: center;
+}
+td.winning-move {
+	color: green;
+}
+td.playertwo:before{
+	content: "\20DD";
+    line-height: 1px;
+    display: block;
+    font-size: 85px;
+}
+td.playerone:before{
+	content: "\274C";
+}

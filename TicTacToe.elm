@@ -47,8 +47,7 @@ view : Signal.Address Action -> Model -> Html
 view address model =
     div [] [
         h1 [] [text (stateDescription model)],
-        table [style [("border", "1px solid black"), ("text-align", "center"), ("font-size", "70px")]] 
-            (Array.indexedMap (toTableRow address model) model.board |> Array.toList)
+        table [] (Array.indexedMap (toTableRow address model) model.board |> Array.toList)
     ]
 
 toTableRow : Signal.Address Action -> Model -> Int -> Array Slot -> Html
@@ -57,17 +56,27 @@ toTableRow address model rowIdx row =
 
 toTableCell : Signal.Address Action -> Model -> Int -> Int -> Slot -> Html
 toTableCell address model rowIdx colIdx slot =
-    td [style [("border", "1px solid black"), ("width", "100px"), ("height", "100px"), ((rowIdx, colIdx) |> isWinningMove model.winningMove |> cellColor) ], onClick address (Play (rowIdx, colIdx))] 
-        [text (case slot of 
-                PlayedBy PlayerOne -> Char.fromCode 0x274C |> String.fromChar
-                PlayedBy PlayerTwo -> Char.fromCode 0x20DD |> String.fromChar
-                Empty -> "")]
+    td [class (cellClasses (rowIdx, colIdx) model slot), onClick address (Play (rowIdx, colIdx))] []
 
-cellColor : Bool -> (String, String)
+cellClasses : Position -> Model -> Slot -> String
+cellClasses pos model slot =
+    let
+        winClass = pos |> isWinningMove model.winningMove |> cellColor
+        playerClass = cellPlayer slot
+    in
+       if winClass /= "" then playerClass ++ " " ++ winClass else playerClass
+
+cellColor : Bool -> String
 cellColor b =
     case b of
-        False -> ("color", "black")
-        True -> ("color", "green")
+        False -> ""
+        True -> "winning-move"
+
+cellPlayer : Slot -> String
+cellPlayer s =
+    case s of 
+        Empty -> ""
+        PlayedBy p -> toString p
 
 stateDescription : Model -> String
 stateDescription model =

@@ -11760,7 +11760,6 @@ Elm.TicTacToe.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
-   $Char = Elm.Char.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
@@ -11769,7 +11768,6 @@ Elm.TicTacToe.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
    $TicTacToe$Model = Elm.TicTacToe.Model.make(_elm),
    $TicTacToe$VictoryConditions = Elm.TicTacToe.VictoryConditions.make(_elm);
    var _op = {};
@@ -11784,30 +11782,47 @@ Elm.TicTacToe.make = function (_elm) {
            $Basics.toString(_p0._0),
            " Won");}
    };
-   var cellColor = function (b) {
-      var _p1 = b;
-      if (_p1 === false) {
-            return {ctor: "_Tuple2",_0: "color",_1: "black"};
+   var cellPlayer = function (s) {
+      var _p1 = s;
+      if (_p1.ctor === "Empty") {
+            return "";
          } else {
-            return {ctor: "_Tuple2",_0: "color",_1: "green"};
+            return $Basics.toString(_p1._0);
          }
    };
+   var cellColor = function (b) {
+      var _p2 = b;
+      if (_p2 === false) {
+            return "";
+         } else {
+            return "winning-move";
+         }
+   };
+   var cellClasses = F3(function (pos,model,slot) {
+      var playerClass = cellPlayer(slot);
+      var winClass = cellColor(A2($TicTacToe$VictoryConditions.isWinningMove,
+      model.winningMove,
+      pos));
+      return !_U.eq(winClass,"") ? A2($Basics._op["++"],
+      playerClass,
+      A2($Basics._op["++"]," ",winClass)) : playerClass;
+   });
    var play = F2(function (model,position) {
-      var _p2 = A2($TicTacToe$Model.get,model.board,position);
-      if (_p2.ctor === "Nothing") {
+      var _p3 = A2($TicTacToe$Model.get,model.board,position);
+      if (_p3.ctor === "Nothing") {
             return model;
          } else {
-            if (_p2._0.ctor === "Empty") {
+            if (_p3._0.ctor === "Empty") {
                   var newTurn = $TicTacToe$Model.switchTurns(model.turn);
                   var boardAfterPlay = A3($TicTacToe$Model.set,
                   position,
                   model.turn,
                   model.board);
-                  var _p3 = A2($TicTacToe$VictoryConditions.detectState,
+                  var _p4 = A2($TicTacToe$VictoryConditions.detectState,
                   model.turn,
                   boardAfterPlay);
-                  var stateAfterPlay = _p3._0;
-                  var winningMove = _p3._1;
+                  var stateAfterPlay = _p4._0;
+                  var winningMove = _p4._1;
                   return _U.update(model,
                   {board: boardAfterPlay
                   ,turn: newTurn
@@ -11819,15 +11834,15 @@ Elm.TicTacToe.make = function (_elm) {
          }
    });
    var update = F2(function (action,model) {
-      var _p4 = action;
-      if (_p4.ctor === "Reset") {
+      var _p5 = action;
+      if (_p5.ctor === "Reset") {
             return $TicTacToe$Model.newModel;
          } else {
-            var _p5 = model.state;
-            switch (_p5.ctor)
+            var _p6 = model.state;
+            switch (_p6.ctor)
             {case "Won": return model;
                case "Stalled": return model;
-               default: return A2(play,model,_p4._0);}
+               default: return A2(play,model,_p5._0);}
          }
    });
    var Play = function (a) {    return {ctor: "Play",_0: a};};
@@ -11837,29 +11852,14 @@ Elm.TicTacToe.make = function (_elm) {
    colIdx,
    slot) {
       return A2($Html.td,
-      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                               ,_0: "border"
-                                               ,_1: "1px solid black"}
-                                              ,{ctor: "_Tuple2",_0: "width",_1: "100px"}
-                                              ,{ctor: "_Tuple2",_0: "height",_1: "100px"}
-                                              ,cellColor(A2($TicTacToe$VictoryConditions.isWinningMove,
-                                              model.winningMove,
-                                              {ctor: "_Tuple2",_0: rowIdx,_1: colIdx}))]))
+      _U.list([$Html$Attributes.$class(A3(cellClasses,
+              {ctor: "_Tuple2",_0: rowIdx,_1: colIdx},
+              model,
+              slot))
               ,A2($Html$Events.onClick,
               address,
               Play({ctor: "_Tuple2",_0: rowIdx,_1: colIdx}))]),
-      _U.list([$Html.text(function () {
-         var _p6 = slot;
-         if (_p6.ctor === "PlayedBy") {
-               if (_p6._0.ctor === "PlayerOne") {
-                     return $String.fromChar($Char.fromCode(10060));
-                  } else {
-                     return $String.fromChar($Char.fromCode(8413));
-                  }
-            } else {
-               return "";
-            }
-      }())]));
+      _U.list([]));
    });
    var toTableRow = F4(function (address,model,rowIdx,row) {
       return A2($Html.tr,
@@ -11875,11 +11875,7 @@ Elm.TicTacToe.make = function (_elm) {
               _U.list([]),
               _U.list([$Html.text(stateDescription(model))]))
               ,A2($Html.table,
-              _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                                       ,_0: "border"
-                                                       ,_1: "1px solid black"}
-                                                      ,{ctor: "_Tuple2",_0: "text-align",_1: "center"}
-                                                      ,{ctor: "_Tuple2",_0: "font-size",_1: "70px"}]))]),
+              _U.list([]),
               $Array.toList(A2($Array.indexedMap,
               A2(toTableRow,address,model),
               model.board)))]));
@@ -11893,7 +11889,9 @@ Elm.TicTacToe.make = function (_elm) {
                                   ,view: view
                                   ,toTableRow: toTableRow
                                   ,toTableCell: toTableCell
+                                  ,cellClasses: cellClasses
                                   ,cellColor: cellColor
+                                  ,cellPlayer: cellPlayer
                                   ,stateDescription: stateDescription};
 };
 Elm.Main = Elm.Main || {};
