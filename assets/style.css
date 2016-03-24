@@ -10,13 +10,19 @@ body div {
   display: inline-block;
 }
 
+h1 a {
+	margin-left: 0.3em;
+	text-decoration: none;
+	color: #21ECA7;
+    padding: 5px 7px 5px 5px;
+    border-radius: 5px;
+}
 table {
-	/*border: 1px solid black;*/
 	font-size: 70px;
 	border-spacing: 0px;
+	display: inline-block;
 }
 td {
-	/*border: 1px solid black;*/
 	width: 105px;
 	height: 105px;
 	text-align: center;
@@ -36,7 +42,7 @@ td.playerone:before{
 
 
 body {background-color: #252830;}
-body * {color: white;}
+body * {color: rgb(197, 197, 197);}
 td.winning-move {color: #21ECA7 !important;}
 
 td.playerone {color: #9F86FF;}
@@ -47,13 +53,3 @@ tr:nth-child(1) td {border-top: none;}
 tr:nth-child(3) td {border-bottom: none;}
 td:nth-child(1) {border-left: none;}
 td:nth-child(3) {border-right: none;}
-
-/*td.winning-move {color: #a4fd81 !important;}
-
-td.playerone {color: #56307e;}
-td.playertwo {color: #04c9e5;}
-
-tr:nth-child(1) td {border-bottom: 5px solid black;}
-tr:nth-child(2) td {border-bottom: 5px solid black;}
-td:nth-child(1) {border-right: 5px solid black;}
-td:nth-child(2) {border-right: 5px solid black;}*/

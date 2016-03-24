@@ -11760,6 +11760,7 @@ Elm.TicTacToe.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Char = Elm.Char.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
@@ -11768,6 +11769,7 @@ Elm.TicTacToe.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
    $TicTacToe$Model = Elm.TicTacToe.Model.make(_elm),
    $TicTacToe$VictoryConditions = Elm.TicTacToe.VictoryConditions.make(_elm);
    var _op = {};
@@ -11868,19 +11870,28 @@ Elm.TicTacToe.make = function (_elm) {
       A3(toTableCell,address,model,rowIdx),
       row)));
    });
+   var Reset = {ctor: "Reset"};
+   var resetButton = F2(function (address,state) {
+      return A2($Html.a,
+      _U.list([$Html$Attributes.href("javascript:void(0)")
+              ,A2($Html$Events.onClick,address,Reset)
+              ,$Html$Attributes.hidden(_U.eq(state,
+              $TicTacToe$Model.GameOn))]),
+      _U.list([$Html.text($String.fromChar($Char.fromCode(10226)))]));
+   });
    var view = F2(function (address,model) {
       return A2($Html.div,
       _U.list([]),
       _U.list([A2($Html.h1,
               _U.list([]),
-              _U.list([$Html.text(stateDescription(model))]))
+              _U.list([$Html.text(stateDescription(model))
+                      ,A2(resetButton,address,model.state)]))
               ,A2($Html.table,
               _U.list([]),
               $Array.toList(A2($Array.indexedMap,
               A2(toTableRow,address,model),
               model.board)))]));
    });
-   var Reset = {ctor: "Reset"};
    return _elm.TicTacToe.values = {_op: _op
                                   ,Reset: Reset
                                   ,Play: Play
@@ -11892,7 +11903,8 @@ Elm.TicTacToe.make = function (_elm) {
                                   ,cellClasses: cellClasses
                                   ,cellColor: cellColor
                                   ,cellPlayer: cellPlayer
-                                  ,stateDescription: stateDescription};
+                                  ,stateDescription: stateDescription
+                                  ,resetButton: resetButton};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {

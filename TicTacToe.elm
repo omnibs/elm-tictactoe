@@ -46,7 +46,7 @@ play model position =
 view : Signal.Address Action -> Model -> Html
 view address model =
     div [] [
-        h1 [] [text (stateDescription model)],
+        h1 [] [text (stateDescription model), resetButton address model.state],
         table [] (Array.indexedMap (toTableRow address model) model.board |> Array.toList)
     ]
 
@@ -86,3 +86,7 @@ stateDescription model =
         Stalled -> "It's a Draw"
         Won p ->
             (toString p) ++ " Won"
+
+resetButton : Signal.Address Action -> BoardState -> Html
+resetButton address state =
+    a [href "javascript:void(0)", onClick address Reset, hidden (state == GameOn)] [text (0x27f2 |> Char.fromCode |> String.fromChar)]
