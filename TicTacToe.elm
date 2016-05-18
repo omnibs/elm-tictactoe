@@ -1,4 +1,4 @@
-module TicTacToe where
+module TicTacToe exposing (..)
 
 import TicTacToe.Model exposing (..)
 import TicTacToe.VictoryConditions exposing (..)
@@ -12,21 +12,21 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
--- ACTION
-type Action = Reset | Play Position
+-- Msg
+type Msg = Reset | Play Position
 
 
-update : Action -> Model -> Model
-update action model =
-    case action of
+update : Msg -> Model -> (Model, Cmd Msg)
+update msg model =
+    case msg of
         Reset -> 
-            newModel
+            (newModel, Cmd.none)
         Play position -> 
             case model.state of
-                Won p -> model
-                Stalled -> model
+                Won p -> (model, Cmd.none)
+                Stalled -> (model, Cmd.none)
                 GameOn ->
-                    play model position
+                    (play model position, Cmd.none)
 
 play : Model -> Position -> Model
 play model position =
@@ -43,20 +43,20 @@ play model position =
             model
 
 -- VIEW
-view : Signal.Address Action -> Model -> Html
-view address model =
+view : Model -> Html Msg
+view model =
     div [] [
-        h1 [] [text (stateDescription model), resetButton address model.state],
-        table [] (Array.indexedMap (toTableRow address model) model.board |> Array.toList)
+        h1 [] [text (stateDescription model), resetButton model.state],
+        table [] (Array.indexedMap (toTableRow model) model.board |> Array.toList)
     ]
 
-toTableRow : Signal.Address Action -> Model -> Int -> Array Slot -> Html
-toTableRow address model rowIdx row =
-    tr [] (Array.indexedMap (toTableCell address model rowIdx) row |> Array.toList)
+toTableRow : Model -> Int -> Array Slot -> Html Msg
+toTableRow model rowIdx row =
+    tr [] (Array.indexedMap (toTableCell model rowIdx) row |> Array.toList)
 
-toTableCell : Signal.Address Action -> Model -> Int -> Int -> Slot -> Html
-toTableCell address model rowIdx colIdx slot =
-    td [class (cellClasses (rowIdx, colIdx) model slot), onClick address (Play (rowIdx, colIdx))] []
+toTableCell : Model -> Int -> Int -> Slot -> Html Msg
+toTableCell model rowIdx colIdx slot =
+    td [class (cellClasses (rowIdx, colIdx) model slot), onClick (Play (rowIdx, colIdx))] []
 
 cellClasses : Position -> Model -> Slot -> String
 cellClasses pos model slot =
@@ -87,6 +87,6 @@ stateDescription model =
         Won p ->
             (toString p) ++ " Won"
 
-resetButton : Signal.Address Action -> BoardState -> Html
-resetButton address state =
-    a [href "javascript:void(0)", onClick address Reset, hidden (state == GameOn)] [text (0x27f2 |> Char.fromCode |> String.fromChar)]
+resetButton : BoardState -> Html Msg
+resetButton state =
+    a [href "javascript:void(0)", onClick Reset, hidden (state == GameOn)] [text (0x27f2 |> Char.fromCode |> String.fromChar)]

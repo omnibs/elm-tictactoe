@@ -1,13 +1,14 @@
-module Main where
+module Main exposing (..)
 
 import TicTacToe.Model
 import TicTacToe exposing (update, view)
-import StartApp.Simple exposing (start)
+import Html.App as Html
 
 
 main =
-  start
-    { model = TicTacToe.Model.newModel
+  Html.program
+    { init = (TicTacToe.Model.newModel, Cmd.none)
     , update = update
     , view = view
+    , subscriptions = \_ -> Sub.none
     }

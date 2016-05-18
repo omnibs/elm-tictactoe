@@ -1,4 +1,4 @@
-module TicTacToe.VictoryConditions where
+module TicTacToe.VictoryConditions exposing (..)
 
 import TicTacToe.Model exposing(..)
 import Set

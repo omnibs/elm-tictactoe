@@ -10,7 +10,7 @@
     	if (typeof Elm.fullscreenDebug !== 'undefined')
     		main = Elm.fullscreenDebug('Main', 'Main.elm');
     	else
-    		main = Elm.embed(Elm.Main, document.getElementsByTagName('div')[0])
+    		main = Elm.Main.embed(document.getElementsByTagName('div')[0])
     </script>
   </body>
 </html>

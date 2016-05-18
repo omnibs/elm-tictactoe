@@ -1,4 +1,4 @@
-module TicTacToe.Model where
+module TicTacToe.Model exposing (..)
 
 import Array exposing(Array)
 
